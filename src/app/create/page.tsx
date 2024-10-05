@@ -1,4 +1,6 @@
+"use client";
 import { createTodoItem } from "@/actions/actions";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import {
   Box,
   Button,
@@ -9,16 +11,32 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
-export default async function createTodoItemForm() {
+export default function createTodoItemForm() {
+  const router = useRouter();
+
+  const handleOnSubmit = () => {
+    toast.success("To do item has been created!");
+    router.push("/");
+  };
+
   return (
     <Box className="pt-10 pl-0 lg:pl-10 min-h-screen bg-gray-300">
       <div className="grid grid-cols-1 lg:grid-cols-3">
+        <button
+          type="button"
+          className="text-left text-black px-5"
+          onClick={() => router.back()}
+        >
+          <ArrowBackIcon />
+        </button>
         <Typography
           variant="h3"
-          className="text-center col-start-1 lg:col-start-2 pl-0 pb-0 lg:pb-10 pt-10 text-black"
+          className="text-center pl-0 pb-0 lg:pb-10 pt-10 text-black"
         >
-          Todo List!
+          My To Do List!
         </Typography>
       </div>
       <Container
@@ -29,6 +47,7 @@ export default async function createTodoItemForm() {
       >
         <form
           action={createTodoItem}
+          onSubmit={handleOnSubmit}
           className="w-full lg:w-1/2 py-20 lg:shadow-md flex justify-center pt-10"
         >
           <div className="w-full lg:w-3/4">
@@ -64,14 +83,16 @@ export default async function createTodoItemForm() {
                 </div>
               </Box>
 
-              <Button
-                variant="contained"
-                type="submit"
-                className="w-full sm:col-span-6"
-                sx={{ bgcolor: "#4338ca" }}
-              >
-                Add the new Todo Item
-              </Button>
+              <Box className="sm:col-span-6">
+                <Button
+                  variant="contained"
+                  type="submit"
+                  className="w-full"
+                  sx={{ bgcolor: "#4338ca" }}
+                >
+                  Add the new Todo Item
+                </Button>
+              </Box>
             </FormGroup>
           </div>
         </form>

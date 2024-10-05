@@ -1,10 +1,14 @@
 "use server";
-
 import { Todo } from "@/dtos/todo";
 import db from "@/lib/db";
 
 export async function getAllTodos(): Promise<Todo[]> {
-  const todos = await db.todo.findMany();
+  const todos = await db.todo.findMany({
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+
   return todos.map((todo) => {
     return {
       id: todo.id,
@@ -23,6 +27,38 @@ export async function createTodoItem(formData: FormData) {
       title: formData.get("title") as string,
       content: formData.get("content") as string,
       statusId: 1,
+    },
+  });
+}
+
+export async function updateTodoItem(todoItem: Todo) {
+  await db.todo.update({
+    data: {
+      title: todoItem.title,
+      content: todoItem.content,
+      statusId: todoItem.statusId,
+    },
+    where: {
+      id: todoItem.id,
+    },
+  });
+}
+
+export async function updateStatusId(id: number, statusId: number) {
+  await db.todo.update({
+    data: {
+      statusId: statusId,
+    },
+    where: {
+      id: id,
+    },
+  });
+}
+
+export async function deleteTodoItem(id: number) {
+  await db.todo.delete({
+    where: {
+      id: id,
     },
   });
 }
