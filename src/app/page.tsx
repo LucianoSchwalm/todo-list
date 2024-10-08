@@ -61,7 +61,7 @@ export default function Home() {
           <Box className="flex flex-row justify-center pt-5">
             <InputLabel
               htmlFor="filter"
-              className="block text-xl font-medium leading-6 text-gray-900 pt-4"
+              className="block text-xl font-medium leading-6 text-gray-900 pt-5"
             >
               Filter By:
             </InputLabel>
@@ -217,7 +217,7 @@ export default function Home() {
                                   isEditting: !todoItem.isEditting,
                                 })
                               }
-                              hidden={todoItem.isEditting}
+                              hidden={todoItem?.isEditting}
                             >
                               <EditIcon />
                             </Button>
@@ -227,7 +227,7 @@ export default function Home() {
                               onClick={() =>
                                 updateTodoItemMutation.mutate(todoItem)
                               }
-                              hidden={!todoItem.isEditting}
+                              hidden={!todoItem?.isEditting}
                             >
                               <CheckCircleIcon />
                             </Button>
@@ -237,10 +237,10 @@ export default function Home() {
                               onClick={() =>
                                 handleIsEdittingMutation.mutate({
                                   todoItemId: todoItem.id,
-                                  isEditting: !todoItem.isEditting,
+                                  isEditting: !todoItem?.isEditting,
                                 })
                               }
-                              hidden={!todoItem.isEditting}
+                              hidden={!todoItem?.isEditting}
                             >
                               <CancelIcon />
                             </Button>
