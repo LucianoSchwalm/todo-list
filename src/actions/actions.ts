@@ -4,7 +4,7 @@ import db from "@/lib/db";
 
 export async function getAllTodos(filter?: number): Promise<Todo[]> {
   let todos;
-  if (filter) {
+  if (filter != 0) {
     todos = await db.todo.findMany({
       where: {
         statusId: filter,

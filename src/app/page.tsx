@@ -23,11 +23,9 @@ import {
   Typography,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import { useEffect, useState } from "react";
 import { Status } from "@/dtos/status";
 import { useHome } from "./use-home";
 import { TodoState } from "@/dtos/todoState";
-import { select } from "@material-tailwind/react";
 
 const useStyles = makeStyles({
   tableRow: {
@@ -39,30 +37,18 @@ const useStyles = makeStyles({
 });
 
 export default function Home() {
-  const [filter, setFilter] = useState("0");
   const classes = useStyles();
   const {
-    getTodos,
-    handleTodoCheck,
-    handleTodoContent,
-    handleTodoTitle,
-    handleTodoItemUpdate,
-    handleDeleteButton,
-    handleIsEditting,
-    todoItemsState,
+    data,
+    filter,
+    handleFilterMutation,
+    handleTodoCheckMutation,
+    handleTodoContentMutation,
+    handleTodoTitleMutation,
+    handleDeleteButtonMutation,
+    handleIsEdittingMutation,
+    updateTodoItemMutation,
   } = useHome();
-
-  useEffect(() => {
-    getTodos(Number.parseInt(filter));
-  }, []);
-
-  useEffect(() => {
-    getTodos(Number.parseInt(filter));
-  }, [todoItemsState?.length]);
-
-  useEffect(() => {
-    getTodos(Number.parseInt(filter));
-  }, [filter]);
 
   return (
     <Box className="pt-10 pl-0 lg:pl-10 min-h-screen bg-gray-300">
@@ -84,7 +70,9 @@ export default function Home() {
                 id="filter"
                 value={filter}
                 className="px-5"
-                onChange={(ev) => setFilter(ev.target.value)}
+                onChange={(ev) =>
+                  handleFilterMutation.mutate(Number.parseInt(ev.target.value))
+                }
               >
                 <MenuItem value={0}>None</MenuItem>
                 <MenuItem value={1}>Pending</MenuItem>
@@ -135,7 +123,7 @@ export default function Home() {
                       </TableCell>
                     </TableRow>
                   </TableHead>
-                  {todoItemsState?.map((todoItem: TodoState) => (
+                  {data?.map((todoItem: TodoState) => (
                     <TableBody key={todoItem.id}>
                       <TableRow className={classes.tableRow}>
                         <TableCell>
@@ -147,7 +135,10 @@ export default function Home() {
                             checkedIcon={<CheckCircleIcon />}
                             checked={todoItem.statusId == Status.COMPLETE}
                             onChange={(ev) =>
-                              handleTodoCheck(todoItem.id, ev.target.checked)
+                              handleTodoCheckMutation.mutate({
+                                todoItemId: todoItem.id,
+                                checked: ev.target.checked,
+                              })
                             }
                           />
                         </TableCell>
@@ -159,7 +150,10 @@ export default function Home() {
                               type="text"
                               value={todoItem.title ?? ""}
                               onChange={(ev) =>
-                                handleTodoTitle(todoItem.id, ev.target.value)
+                                handleTodoTitleMutation.mutate({
+                                  todoItemId: todoItem.id,
+                                  title: ev.target.value,
+                                })
                               }
                               className="block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                             />
@@ -180,7 +174,10 @@ export default function Home() {
                               variant="standard"
                               value={todoItem.content ?? ""}
                               onChange={(ev) =>
-                                handleTodoContent(todoItem.id, ev.target.value)
+                                handleTodoContentMutation.mutate({
+                                  todoItemId: todoItem.id,
+                                  content: ev.target.value,
+                                })
                               }
                               rows={2}
                             />
@@ -215,10 +212,10 @@ export default function Home() {
                               key={`edit${todoItem.id}`}
                               color="inherit"
                               onClick={() =>
-                                handleIsEditting(
-                                  todoItem.id,
-                                  !todoItem.isEditting
-                                )
+                                handleIsEdittingMutation.mutate({
+                                  todoItemId: todoItem.id,
+                                  isEditting: !todoItem.isEditting,
+                                })
                               }
                               hidden={todoItem.isEditting}
                             >
@@ -227,7 +224,9 @@ export default function Home() {
                             <Button
                               key={todoItem.id}
                               color="success"
-                              onClick={() => handleTodoItemUpdate(todoItem)}
+                              onClick={() =>
+                                updateTodoItemMutation.mutate(todoItem)
+                              }
                               hidden={!todoItem.isEditting}
                             >
                               <CheckCircleIcon />
@@ -236,10 +235,10 @@ export default function Home() {
                               key={`cancel${todoItem.id}`}
                               color="error"
                               onClick={() =>
-                                handleIsEditting(
-                                  todoItem.id,
-                                  !todoItem.isEditting
-                                )
+                                handleIsEdittingMutation.mutate({
+                                  todoItemId: todoItem.id,
+                                  isEditting: !todoItem.isEditting,
+                                })
                               }
                               hidden={!todoItem.isEditting}
                             >
@@ -249,7 +248,9 @@ export default function Home() {
                         </TableCell>
                         <TableCell>
                           <Button
-                            onClick={() => handleDeleteButton(todoItem.id)}
+                            onClick={() =>
+                              handleDeleteButtonMutation.mutate(todoItem.id)
+                            }
                           >
                             <DeleteIcon color="action" />
                           </Button>
