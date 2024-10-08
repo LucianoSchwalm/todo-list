@@ -61,7 +61,7 @@ export default function Home() {
           <Box className="flex flex-row justify-center pt-5">
             <InputLabel
               htmlFor="filter"
-              className="block text-xl font-medium leading-6 text-gray-900 pt-5"
+              className="block text-xl leading-6 font-bold pt-5"
             >
               Filter By:
             </InputLabel>
@@ -207,7 +207,7 @@ export default function Home() {
                           </Typography>
                         </TableCell>
                         <TableCell className="min-w-40">
-                          <>
+                          {!todoItem.isEditting ? (
                             <Button
                               key={`edit${todoItem.id}`}
                               color="inherit"
@@ -217,34 +217,34 @@ export default function Home() {
                                   isEditting: !todoItem.isEditting,
                                 })
                               }
-                              hidden={todoItem?.isEditting}
                             >
                               <EditIcon />
                             </Button>
-                            <Button
-                              key={todoItem.id}
-                              color="success"
-                              onClick={() =>
-                                updateTodoItemMutation.mutate(todoItem)
-                              }
-                              hidden={!todoItem?.isEditting}
-                            >
-                              <CheckCircleIcon />
-                            </Button>
-                            <Button
-                              key={`cancel${todoItem.id}`}
-                              color="error"
-                              onClick={() =>
-                                handleIsEdittingMutation.mutate({
-                                  todoItemId: todoItem.id,
-                                  isEditting: !todoItem?.isEditting,
-                                })
-                              }
-                              hidden={!todoItem?.isEditting}
-                            >
-                              <CancelIcon />
-                            </Button>
-                          </>
+                          ) : (
+                            <>
+                              <Button
+                                key={todoItem.id}
+                                color="success"
+                                onClick={() =>
+                                  updateTodoItemMutation.mutate(todoItem)
+                                }
+                              >
+                                <CheckCircleIcon />
+                              </Button>
+                              <Button
+                                key={`cancel${todoItem.id}`}
+                                color="error"
+                                onClick={() =>
+                                  handleIsEdittingMutation.mutate({
+                                    todoItemId: todoItem.id,
+                                    isEditting: !todoItem?.isEditting,
+                                  })
+                                }
+                              >
+                                <CancelIcon />
+                              </Button>
+                            </>
+                          )}
                         </TableCell>
                         <TableCell>
                           <Button
