@@ -2,12 +2,24 @@
 import { Todo } from "@/dtos/todo";
 import db from "@/lib/db";
 
-export async function getAllTodos(): Promise<Todo[]> {
-  const todos = await db.todo.findMany({
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
+export async function getAllTodos(filter?: number): Promise<Todo[]> {
+  let todos;
+  if (filter) {
+    todos = await db.todo.findMany({
+      where: {
+        statusId: filter,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+  } else {
+    todos = await db.todo.findMany({
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+  }
 
   return todos.map((todo) => {
     return {

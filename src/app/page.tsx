@@ -10,22 +10,37 @@ import {
   Checkbox,
   Container,
   Input,
+  InputLabel,
   Link,
+  MenuItem,
+  Select,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableRow,
+  TextField,
   Typography,
 } from "@mui/material";
-import { Todo } from "@/dtos/todo";
+import { makeStyles } from "@mui/styles";
 import { useEffect, useState } from "react";
 import { Status } from "@/dtos/status";
 import { useHome } from "./use-home";
+import { TodoState } from "@/dtos/todoState";
+import { select } from "@material-tailwind/react";
+
+const useStyles = makeStyles({
+  tableRow: {
+    height: 100,
+  },
+  tableHeadRow: {
+    fontWeight: 700,
+  },
+});
 
 export default function Home() {
-  const [isEditting, setIsEditting] = useState(false);
-
+  const [filter, setFilter] = useState("0");
+  const classes = useStyles();
   const {
     getTodos,
     handleTodoCheck,
@@ -33,26 +48,51 @@ export default function Home() {
     handleTodoTitle,
     handleTodoItemUpdate,
     handleDeleteButton,
+    handleIsEditting,
     todoItemsState,
-  } = useHome(isEditting, setIsEditting);
+  } = useHome();
 
   useEffect(() => {
-    getTodos();
+    getTodos(Number.parseInt(filter));
   }, []);
 
   useEffect(() => {
-    getTodos();
+    getTodos(Number.parseInt(filter));
   }, [todoItemsState?.length]);
+
+  useEffect(() => {
+    getTodos(Number.parseInt(filter));
+  }, [filter]);
 
   return (
     <Box className="pt-10 pl-0 lg:pl-10 min-h-screen bg-gray-300">
       <div className="grid grid-cols-1 lg:grid-cols-3 pt-10">
-        <Typography
-          variant="h3"
-          className="text-center col-start-1 lg:col-start-2 pb-10 lg:pb-0 text-black"
-        >
-          My To Do List!
-        </Typography>
+        <div className="text-center col-start-1 lg:col-start-2 pb-10 lg:pb-0 text-black">
+          <Typography variant="h3">Welcome Back!</Typography>
+          <Typography variant="h6" className="pt-2">
+            Here are your tasks
+          </Typography>
+          <Box className="flex flex-row justify-center pt-5">
+            <InputLabel
+              htmlFor="filter"
+              className="block text-xl font-medium leading-6 text-gray-900 pt-4"
+            >
+              Filter By:
+            </InputLabel>
+            <div className="px-5">
+              <Select
+                id="filter"
+                value={filter}
+                className="px-5"
+                onChange={(ev) => setFilter(ev.target.value)}
+              >
+                <MenuItem value={0}>None</MenuItem>
+                <MenuItem value={1}>Pending</MenuItem>
+                <MenuItem value={2}>Completed</MenuItem>
+              </Select>
+            </div>
+          </Box>
+        </div>
         <Link href={"/create"}>
           <div className="text-center">
             <Button
@@ -70,23 +110,34 @@ export default function Home() {
           justifyContent: "center",
         }}
       >
-        <Box className="w-full py-20 flex justify-center pt-10">
+        <Box className="w-full flex justify-center">
           <Box className="w-full lg:w-full">
-            <Box className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+            <Box className="mt-10 grid grid-cols-1 sm:grid-cols-6">
               <Box className="sm:col-span-6">
-                <Table className="bg-gray-300 text-black text-left sm:col-span-6">
+                <Table
+                  className="bg-gray-300 text-black text-left sm:col-span-6"
+                  cellPadding="1000px"
+                >
                   <TableHead>
                     <TableRow>
                       <TableCell />
-                      <TableCell>Title</TableCell>
-                      <TableCell>Description</TableCell>
-                      <TableCell>Date of Creation</TableCell>
-                      <TableCell>Status</TableCell>
+                      <TableCell className={classes.tableHeadRow}>
+                        Title
+                      </TableCell>
+                      <TableCell className={classes.tableHeadRow}>
+                        Description
+                      </TableCell>
+                      <TableCell className={classes.tableHeadRow}>
+                        Date of Creation
+                      </TableCell>
+                      <TableCell className={classes.tableHeadRow}>
+                        Status
+                      </TableCell>
                     </TableRow>
                   </TableHead>
-                  {todoItemsState?.map((todoItem: Todo) => (
+                  {todoItemsState?.map((todoItem: TodoState) => (
                     <TableBody key={todoItem.id}>
-                      <TableRow>
+                      <TableRow className={classes.tableRow}>
                         <TableCell>
                           <Checkbox
                             id={`${todoItem.id}`}
@@ -100,8 +151,8 @@ export default function Home() {
                             }
                           />
                         </TableCell>
-                        <TableCell>
-                          {isEditting ? (
+                        <TableCell className="min-w-60 min-h-96">
+                          {todoItem.isEditting ? (
                             <Input
                               id="title"
                               name="title"
@@ -110,43 +161,66 @@ export default function Home() {
                               onChange={(ev) =>
                                 handleTodoTitle(todoItem.id, ev.target.value)
                               }
-                              className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                              className="block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                             />
                           ) : (
-                            todoItem.title
+                            <Typography variant="body1">
+                              {todoItem.title}
+                            </Typography>
                           )}
                         </TableCell>
-                        <TableCell>
-                          {isEditting ? (
-                            <Input
+                        <TableCell className="min-w-96">
+                          {todoItem.isEditting ? (
+                            <TextField
                               id="content"
                               name="content"
-                              type="text"
+                              fullWidth
+                              multiline
+                              minRows={2}
+                              variant="standard"
                               value={todoItem.content ?? ""}
                               onChange={(ev) =>
                                 handleTodoContent(todoItem.id, ev.target.value)
                               }
-                              className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                              rows={2}
                             />
                           ) : (
-                            todoItem.content
+                            <Typography variant="body1">
+                              {todoItem.content}
+                            </Typography>
                           )}
                         </TableCell>
-                        <TableCell>
-                          {todoItem.createdAt.toLocaleDateString()}
+                        <TableCell className="min-w-36">
+                          <Typography variant="body1">
+                            {todoItem.createdAt.toLocaleDateString()}
+                          </Typography>
                         </TableCell>
                         <TableCell>
-                          {todoItem.statusId == Status.PENDING
-                            ? "Pending"
-                            : "Complete"}
+                          <Typography
+                            variant="body1"
+                            color={
+                              todoItem.statusId == Status.PENDING
+                                ? "warning"
+                                : "success"
+                            }
+                          >
+                            {todoItem.statusId == Status.PENDING
+                              ? "Pending"
+                              : "Complete"}
+                          </Typography>
                         </TableCell>
-                        <TableCell>
+                        <TableCell className="min-w-40">
                           <>
                             <Button
                               key={`edit${todoItem.id}`}
                               color="inherit"
-                              onClick={() => setIsEditting(!isEditting)}
-                              hidden={isEditting}
+                              onClick={() =>
+                                handleIsEditting(
+                                  todoItem.id,
+                                  !todoItem.isEditting
+                                )
+                              }
+                              hidden={todoItem.isEditting}
                             >
                               <EditIcon />
                             </Button>
@@ -154,15 +228,20 @@ export default function Home() {
                               key={todoItem.id}
                               color="success"
                               onClick={() => handleTodoItemUpdate(todoItem)}
-                              hidden={!isEditting}
+                              hidden={!todoItem.isEditting}
                             >
                               <CheckCircleIcon />
                             </Button>
                             <Button
                               key={`cancel${todoItem.id}`}
                               color="error"
-                              onClick={() => setIsEditting(!isEditting)}
-                              hidden={!isEditting}
+                              onClick={() =>
+                                handleIsEditting(
+                                  todoItem.id,
+                                  !todoItem.isEditting
+                                )
+                              }
+                              hidden={!todoItem.isEditting}
                             >
                               <CancelIcon />
                             </Button>
