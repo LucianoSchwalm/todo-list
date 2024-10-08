@@ -21,8 +21,3 @@ model Todo{
   content   String?  @db.VarChar(255)
   statusId  Int
 }
-
-model Status{
-  id     Int    @id @default(autoincrement())
-  status String @db.VarChar(255)
-}
