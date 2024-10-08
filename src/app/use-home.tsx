@@ -18,7 +18,6 @@ export const useHome = () => {
     const newTodoItemsState = todoItems.map((todoItem) => {
       return { ...todoItem, isEditting: false };
     });
-    console.log(newTodoItemsState);
     setTodoItemsState(newTodoItemsState);
   };
 
