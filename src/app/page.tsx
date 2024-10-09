@@ -48,7 +48,7 @@ const useStyles = makeStyles({
 });
 
 export default function Home() {
-   const isMobile = useMediaQuery("(min-width:1024px)");
+   const isMobile = useMediaQuery("(min-width:1300px)");
    const classes = useStyles();
    const {
       data,
@@ -165,13 +165,7 @@ export default function Home() {
                            </TableHead>
                            {data?.map((todoItem: TodoState) => (
                               <TableBody key={todoItem.id}>
-                                 <TableRow
-                                    className={
-                                       isMobile
-                                          ? classes.tableRowMobile
-                                          : classes.tableRow
-                                    }
-                                 >
+                                 <TableRow>
                                     <TableCell>
                                        <Checkbox
                                           id={`${todoItem.id}`}
@@ -192,119 +186,167 @@ export default function Home() {
                                        />
                                     </TableCell>
                                     <TableCell className="min-w-60 min-h-96">
-                                       {todoItem.isEditting ? (
-                                          <Input
-                                             id="title"
-                                             name="title"
-                                             type="text"
-                                             value={todoItem.title ?? ""}
-                                             onChange={(ev) =>
-                                                handleTodoTitleMutation.mutate({
-                                                   todoItemId: todoItem.id,
-                                                   title: ev.target.value,
-                                                })
-                                             }
-                                             className="block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                          />
-                                       ) : (
-                                          <Typography variant="body1">
-                                             {todoItem.title}
-                                          </Typography>
-                                       )}
-                                    </TableCell>
-                                    <TableCell className="min-w-96">
-                                       {todoItem.isEditting ? (
-                                          <TextField
-                                             id="content"
-                                             name="content"
-                                             fullWidth
-                                             multiline
-                                             minRows={2}
-                                             variant="standard"
-                                             value={todoItem.content ?? ""}
-                                             onChange={(ev) =>
-                                                handleTodoContentMutation.mutate(
-                                                   {
-                                                      todoItemId: todoItem.id,
-                                                      content: ev.target.value,
-                                                   }
-                                                )
-                                             }
-                                             rows={2}
-                                          />
-                                       ) : (
-                                          <Typography variant="body1">
-                                             {todoItem.content}
-                                          </Typography>
-                                       )}
-                                    </TableCell>
-                                    <TableCell className="min-w-36">
-                                       <Typography variant="body1">
-                                          {todoItem.createdAt.toLocaleDateString()}
-                                       </Typography>
-                                    </TableCell>
-                                    <TableCell>
-                                       <Typography
-                                          variant="body1"
-                                          color={
-                                             todoItem.statusId == Status.PENDING
-                                                ? "warning"
-                                                : "success"
+                                       <Box
+                                          className={
+                                             isMobile
+                                                ? classes.tableRowMobile
+                                                : classes.tableRow
                                           }
                                        >
-                                          {todoItem.statusId == Status.PENDING
-                                             ? "Pending"
-                                             : "Complete"}
-                                       </Typography>
-                                    </TableCell>
-                                    <TableCell className="min-w-40">
-                                       {!todoItem.isEditting ? (
-                                          <Button
-                                             key={`edit${todoItem.id}`}
-                                             color="inherit"
-                                             onClick={() =>
-                                                handleIsEdittingMutation.mutate(
-                                                   {
-                                                      todoItemId: todoItem.id,
-                                                      isEditting:
-                                                         !todoItem.isEditting,
-                                                   }
-                                                )
-                                             }
-                                          >
-                                             <EditIcon />
-                                          </Button>
-                                       ) : (
-                                          <>
-                                             <Button
-                                                key={todoItem.id}
-                                                color="success"
-                                                onClick={() =>
-                                                   updateTodoItemMutation.mutate(
-                                                      todoItem
+                                          {todoItem.isEditting ? (
+                                             <Input
+                                                id="title"
+                                                name="title"
+                                                type="text"
+                                                value={todoItem.title ?? ""}
+                                                onChange={(ev) =>
+                                                   handleTodoTitleMutation.mutate(
+                                                      {
+                                                         todoItemId:
+                                                            todoItem.id,
+                                                         title: ev.target.value,
+                                                      }
                                                    )
                                                 }
-                                             >
-                                                <CheckCircleIcon />
-                                             </Button>
+                                                className="block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                             />
+                                          ) : (
+                                             <Typography variant="body1">
+                                                {todoItem.title}
+                                             </Typography>
+                                          )}
+                                       </Box>
+                                    </TableCell>
+                                    <TableCell className="min-w-96">
+                                       <Box
+                                          className={
+                                             isMobile
+                                                ? classes.tableRowMobile
+                                                : classes.tableRow
+                                          }
+                                       >
+                                          {todoItem.isEditting ? (
+                                             <TextField
+                                                id="content"
+                                                name="content"
+                                                fullWidth
+                                                multiline
+                                                minRows={2}
+                                                variant="standard"
+                                                value={todoItem.content ?? ""}
+                                                onChange={(ev) =>
+                                                   handleTodoContentMutation.mutate(
+                                                      {
+                                                         todoItemId:
+                                                            todoItem.id,
+                                                         content:
+                                                            ev.target.value,
+                                                      }
+                                                   )
+                                                }
+                                                rows={2}
+                                             />
+                                          ) : (
+                                             <Typography variant="body1">
+                                                {todoItem.content}
+                                             </Typography>
+                                          )}
+                                       </Box>
+                                    </TableCell>
+                                    <TableCell className="min-w-36">
+                                       <Box
+                                          className={
+                                             isMobile
+                                                ? classes.tableRowMobile
+                                                : classes.tableRow
+                                          }
+                                       >
+                                          <Typography variant="body1">
+                                             {todoItem.createdAt.toLocaleDateString()}
+                                          </Typography>
+                                       </Box>
+                                    </TableCell>
+                                    <TableCell>
+                                       <Box
+                                          className={
+                                             isMobile
+                                                ? classes.tableRowMobile
+                                                : classes.tableRow
+                                          }
+                                       >
+                                          <Typography
+                                             variant="body1"
+                                             color={
+                                                todoItem.statusId ==
+                                                Status.PENDING
+                                                   ? "warning"
+                                                   : "success"
+                                             }
+                                          >
+                                             {todoItem.statusId ==
+                                             Status.PENDING
+                                                ? "Pending"
+                                                : "Complete"}
+                                          </Typography>
+                                       </Box>
+                                    </TableCell>
+                                    <TableCell className="min-w-40">
+                                       <Box
+                                          className={
+                                             isMobile
+                                                ? classes.tableRowMobile
+                                                : classes.tableRow
+                                          }
+                                       >
+                                          {!todoItem.isEditting ? (
                                              <Button
-                                                key={`cancel${todoItem.id}`}
-                                                color="error"
+                                                key={`edit${todoItem.id}`}
+                                                color="inherit"
                                                 onClick={() =>
                                                    handleIsEdittingMutation.mutate(
                                                       {
                                                          todoItemId:
                                                             todoItem.id,
                                                          isEditting:
-                                                            !todoItem?.isEditting,
+                                                            !todoItem.isEditting,
                                                       }
                                                    )
                                                 }
                                              >
-                                                <CancelIcon />
+                                                <EditIcon />
                                              </Button>
-                                          </>
-                                       )}
+                                          ) : (
+                                             <>
+                                                <Button
+                                                   key={todoItem.id}
+                                                   color="success"
+                                                   onClick={() =>
+                                                      updateTodoItemMutation.mutate(
+                                                         todoItem
+                                                      )
+                                                   }
+                                                >
+                                                   <CheckCircleIcon />
+                                                </Button>
+                                                <Button
+                                                   key={`cancel${todoItem.id}`}
+                                                   color="error"
+                                                   onClick={() =>
+                                                      handleIsEdittingMutation.mutate(
+                                                         {
+                                                            todoItemId:
+                                                               todoItem.id,
+                                                            isEditting:
+                                                               !todoItem?.isEditting,
+                                                         }
+                                                      )
+                                                   }
+                                                >
+                                                   <CancelIcon />
+                                                </Button>
+                                             </>
+                                          )}
+                                       </Box>
                                     </TableCell>
                                     <TableCell>
                                        <Button
