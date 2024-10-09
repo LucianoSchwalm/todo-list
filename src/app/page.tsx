@@ -165,7 +165,13 @@ export default function Home() {
                            </TableHead>
                            {data?.map((todoItem: TodoState) => (
                               <TableBody key={todoItem.id}>
-                                 <TableRow className={classes.tableRow}>
+                                 <TableRow
+                                    className={
+                                       isMobile
+                                          ? classes.tableRowMobile
+                                          : classes.tableRow
+                                    }
+                                 >
                                     <TableCell>
                                        <Checkbox
                                           id={`${todoItem.id}`}
