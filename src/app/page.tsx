@@ -33,8 +33,12 @@ const useStyles = makeStyles({
       height: 100,
       fontSize: "15px",
    },
-   tableRowMobile: {
+   tableRowMedium: {
       height: 100,
+      fontSize: "12px",
+   },
+   tableRowMobile: {
+      height: 60,
       fontSize: "8px",
    },
    tableHeadRow: {
@@ -48,7 +52,8 @@ const useStyles = makeStyles({
 });
 
 export default function Home() {
-   const isMobile = useMediaQuery("(min-width:1300px)");
+   const isMedium = useMediaQuery("(min-width:1300px)");
+   const isMobile = useMediaQuery("(min-width:600px)");
    const classes = useStyles();
    const {
       data,
@@ -217,7 +222,15 @@ export default function Home() {
                                           )}
                                        </Box>
                                     </TableCell>
-                                    <TableCell className="min-w-96">
+                                    <TableCell
+                                       className={
+                                          isMobile
+                                             ? "w-40"
+                                             : isMedium
+                                             ? "w-64"
+                                             : "w-96"
+                                       }
+                                    >
                                        <Box
                                           className={
                                              isMobile
