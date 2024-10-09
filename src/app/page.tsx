@@ -71,7 +71,7 @@ export default function Home() {
       <Box className="pt-10 pl-0 lg:pl-10 min-h-screen bg-gray-300">
          <div className="grid grid-cols-1 lg:grid-cols-3 pt-10">
             <div className="text-center col-start-1 lg:col-start-2 pb-10 lg:pb-0 text-black">
-               <Typography variant="h3" className="text-xl lg:text-2xl">
+               <Typography variant="h3" className="text-base lg:text-2xl">
                   Welcome Back!
                </Typography>
                <Typography variant="h6" className="pt-2 text-xs lg:text-xl">
@@ -190,11 +190,13 @@ export default function Home() {
                                           }
                                        />
                                     </TableCell>
-                                    <TableCell className="min-w-60 min-h-96">
+                                    <TableCell className="min-w-60">
                                        <Box
                                           className={
                                              isMobile
                                                 ? classes.tableRowMobile
+                                                : isMedium
+                                                ? classes.tableRowMedium
                                                 : classes.tableRow
                                           }
                                        >
