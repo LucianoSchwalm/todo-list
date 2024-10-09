@@ -31,18 +31,11 @@ import { TodoState } from "@/dtos/todoState";
 const useStyles = makeStyles({
   tableRow: {
     height: 100,
+    width: 50,
   },
   tableRowMobile: {
     height: 60,
-  },
-  tableCell: {
-    fontSize: "15px",
-  },
-  tableCellMedium: {
-    fontSize: "10px",
-  },
-  tableCellMobile: {
-    fontSize: "6px",
+    maxWidth: 10,
   },
   tableHeadRow: {
     fontWeight: 700,
@@ -50,7 +43,7 @@ const useStyles = makeStyles({
   },
   tableHeadRowMobile: {
     fontWeight: 700,
-    fontSize: "7px",
+    fontSize: "10px",
   },
 });
 
@@ -193,15 +186,7 @@ export default function Home() {
                           />
                         </TableCell>
                         <TableCell className="w-60">
-                          <Box
-                            className={
-                              isMobile
-                                ? classes.tableCellMobile
-                                : isMedium
-                                ? classes.tableCellMedium
-                                : classes.tableCell
-                            }
-                          >
+                          <Box>
                             {todoItem.isEditting ? (
                               <Input
                                 id="title"
@@ -214,31 +199,17 @@ export default function Home() {
                                     title: ev.target.value,
                                   })
                                 }
-                                className="block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                className="text-xs md:text-sm lg:text-base block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                               />
                             ) : (
-                              <Typography>{todoItem.title}</Typography>
+                              <Typography className="text-xs md:text-sm lg:text-base">
+                                {todoItem.title}
+                              </Typography>
                             )}
                           </Box>
                         </TableCell>
-                        <TableCell
-                          className={
-                            isMobile
-                              ? "min-w-40"
-                              : isMedium
-                              ? "min-w-64"
-                              : "min-w-96"
-                          }
-                        >
-                          <Box
-                            className={
-                              isMobile
-                                ? classes.tableCellMobile
-                                : isMedium
-                                ? classes.tableCellMedium
-                                : classes.tableCell
-                            }
-                          >
+                        <TableCell>
+                          <Box>
                             {todoItem.isEditting ? (
                               <TextField
                                 id="content"
@@ -248,6 +219,7 @@ export default function Home() {
                                 minRows={2}
                                 variant="standard"
                                 value={todoItem.content ?? ""}
+                                className="text-xs md:text-sm lg:text-base"
                                 onChange={(ev) =>
                                   handleTodoContentMutation.mutate({
                                     todoItemId: todoItem.id,
@@ -257,36 +229,23 @@ export default function Home() {
                                 rows={2}
                               />
                             ) : (
-                              <Typography>{todoItem.content}</Typography>
+                              <Typography className="text-xs md:text-sm lg:text-base">
+                                {todoItem.content}
+                              </Typography>
                             )}
                           </Box>
                         </TableCell>
-                        <TableCell className="w-36">
-                          <Box
-                            className={
-                              isMobile
-                                ? classes.tableCellMobile
-                                : isMedium
-                                ? classes.tableCellMedium
-                                : classes.tableCell
-                            }
-                          >
-                            <Typography>
+                        <TableCell className="w-36 h-24">
+                          <Box>
+                            <Typography className="text-xs md:text-sm lg:text-base">
                               {todoItem.createdAt.toLocaleDateString()}
                             </Typography>
                           </Box>
                         </TableCell>
                         <TableCell>
-                          <Box
-                            className={
-                              isMobile
-                                ? classes.tableCellMobile
-                                : isMedium
-                                ? classes.tableCellMedium
-                                : classes.tableCell
-                            }
-                          >
+                          <Box>
                             <Typography
+                              className="text-xs md:text-sm lg:text-base"
                               color={
                                 todoItem.statusId == Status.PENDING
                                   ? "warning"
@@ -300,15 +259,7 @@ export default function Home() {
                           </Box>
                         </TableCell>
                         <TableCell className="w-40">
-                          <Box
-                            className={
-                              isMobile
-                                ? classes.tableCellMobile
-                                : isMedium
-                                ? classes.tableCellMedium
-                                : classes.tableCell
-                            }
-                          >
+                          <Box>
                             {!todoItem.isEditting ? (
                               <Button
                                 key={`edit${todoItem.id}`}
@@ -320,7 +271,7 @@ export default function Home() {
                                   })
                                 }
                               >
-                                <EditIcon />
+                                <EditIcon fontSize="small" />
                               </Button>
                             ) : (
                               <>
@@ -331,7 +282,7 @@ export default function Home() {
                                     updateTodoItemMutation.mutate(todoItem)
                                   }
                                 >
-                                  <CheckCircleIcon />
+                                  <CheckCircleIcon fontSize="small" />
                                 </Button>
                                 <Button
                                   key={`cancel${todoItem.id}`}
@@ -343,7 +294,7 @@ export default function Home() {
                                     })
                                   }
                                 >
-                                  <CancelIcon />
+                                  <CancelIcon fontSize="small" />
                                 </Button>
                               </>
                             )}
@@ -354,9 +305,8 @@ export default function Home() {
                             onClick={() =>
                               handleDeleteButtonMutation.mutate(todoItem.id)
                             }
-                            className="s-2"
                           >
-                            <DeleteIcon color="action" />
+                            <DeleteIcon color="action" fontSize="small" />
                           </Button>
                         </TableCell>
                       </TableRow>
