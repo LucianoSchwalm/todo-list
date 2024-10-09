@@ -48,7 +48,7 @@ const useStyles = makeStyles({
 });
 
 export default function Home() {
-   const isMobile = useMediaQuery("(min-width:500px)");
+   const isMobile = useMediaQuery("(min-width:1024px)");
    const classes = useStyles();
    const {
       data,
