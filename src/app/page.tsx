@@ -5,23 +5,23 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import DeleteIcon from "@mui/icons-material/Delete";
 import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
 import {
-   Box,
-   Button,
-   Checkbox,
-   Container,
-   Input,
-   InputLabel,
-   Link,
-   MenuItem,
-   Select,
-   Table,
-   TableBody,
-   TableCell,
-   TableHead,
-   TableRow,
-   TextField,
-   Typography,
-   useMediaQuery,
+  Box,
+  Button,
+  Checkbox,
+  Container,
+  Input,
+  InputLabel,
+  Link,
+  MenuItem,
+  Select,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  TextField,
+  Typography,
+  useMediaQuery,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { Status } from "@/dtos/status";
@@ -29,360 +29,345 @@ import { useHome } from "./use-home";
 import { TodoState } from "@/dtos/todoState";
 
 const useStyles = makeStyles({
-   tableRow: {
-      height: 100,
-      fontSize: "15px",
-   },
-   tableRowMedium: {
-      height: 100,
-      fontSize: "12px",
-   },
-   tableRowMobile: {
-      height: 60,
-      fontSize: "8px",
-   },
-   tableHeadRow: {
-      fontWeight: 700,
-      fontSize: "15px",
-   },
-   tableHeadRowMobile: {
-      fontWeight: 700,
-      fontSize: "9px",
-   },
+  tableRow: {
+    height: 100,
+  },
+  tableRowMobile: {
+    height: 60,
+  },
+  tableCell: {
+    fontSize: "15px",
+  },
+  tableCellMedium: {
+    fontSize: "10px",
+  },
+  tableCellMobile: {
+    fontSize: "6px",
+  },
+  tableHeadRow: {
+    fontWeight: 700,
+    fontSize: "15px",
+  },
+  tableHeadRowMobile: {
+    fontWeight: 700,
+    fontSize: "7px",
+  },
 });
 
 export default function Home() {
-   const isMedium = useMediaQuery("(min-width:1300px)");
-   const isMobile = useMediaQuery("(min-width:600px)");
-   const classes = useStyles();
-   const {
-      data,
-      filter,
-      handleFilterMutation,
-      handleTodoCheckMutation,
-      handleTodoContentMutation,
-      handleTodoTitleMutation,
-      handleDeleteButtonMutation,
-      handleIsEdittingMutation,
-      updateTodoItemMutation,
-   } = useHome();
+  const isMedium = useMediaQuery("(min-width:1300px)");
+  const isMobile = useMediaQuery("(min-width:600px)");
+  const classes = useStyles();
+  const {
+    data,
+    filter,
+    handleFilterMutation,
+    handleTodoCheckMutation,
+    handleTodoContentMutation,
+    handleTodoTitleMutation,
+    handleDeleteButtonMutation,
+    handleIsEdittingMutation,
+    updateTodoItemMutation,
+  } = useHome();
 
-   return (
-      <Box className="pt-10 pl-0 lg:pl-10 min-h-screen bg-gray-300">
-         <div className="grid grid-cols-1 lg:grid-cols-3 pt-10">
-            <div className="text-center col-start-1 lg:col-start-2 pb-10 lg:pb-0 text-black">
-               <Typography variant="h3" className="text-base lg:text-2xl">
-                  Welcome Back!
-               </Typography>
-               <Typography variant="h6" className="pt-2 text-xs lg:text-xl">
-                  Here are your tasks
-               </Typography>
-               <Box className="flex flex-row justify-center pt-5">
-                  <InputLabel
-                     htmlFor="filter"
-                     className="text-sm lg:text-xl block leading-6 font-bold pt-5"
-                  >
-                     Filter By:
-                  </InputLabel>
-                  <div className="px-2 lg:px-5">
-                     <Select
-                        id="filter"
-                        value={filter}
-                        className="text-sm lg:text-xl lg:px-5"
-                        onChange={(ev) =>
-                           handleFilterMutation.mutate(
-                              Number.parseInt(ev.target.value)
-                           )
-                        }
-                     >
-                        <MenuItem value={0}>None</MenuItem>
-                        <MenuItem value={1}>Pending</MenuItem>
-                        <MenuItem value={2}>Completed</MenuItem>
-                     </Select>
-                  </div>
-               </Box>
+  return (
+    <Box className="pt-10 pl-0 lg:pl-10 min-h-screen bg-gray-300">
+      <div className="grid grid-cols-1 lg:grid-cols-3 pt-10">
+        <div className="text-center col-start-1 lg:col-start-2 pb-10 lg:pb-0 text-black">
+          <Typography variant="h3" className="text-base lg:text-2xl">
+            Welcome Back!
+          </Typography>
+          <Typography variant="h6" className="pt-2 text-xs lg:text-xl">
+            Here are your tasks
+          </Typography>
+          <Box className="flex flex-row justify-center pt-5">
+            <InputLabel
+              htmlFor="filter"
+              className="text-sm lg:text-xl block leading-6 font-bold pt-5"
+            >
+              Filter By:
+            </InputLabel>
+            <div className="px-2 lg:px-5">
+              <Select
+                id="filter"
+                value={filter}
+                className="text-sm lg:text-xl lg:px-5"
+                onChange={(ev) =>
+                  handleFilterMutation.mutate(Number.parseInt(ev.target.value))
+                }
+              >
+                <MenuItem value={0}>None</MenuItem>
+                <MenuItem value={1}>Pending</MenuItem>
+                <MenuItem value={2}>Completed</MenuItem>
+              </Select>
             </div>
-            <Link href={"/create"}>
-               <div className="text-center">
-                  <Button
-                     variant="outlined"
-                     className="text-xs md:text-base lg:text-base bg-transparent hover:bg-indigo-500 text-indigo-700 font-semibold hover:text-white py-1 px-2 lg:py-2 lg:px-4 border border-indigo-500 hover:border-transparent rounded"
-                  >
-                     + Add a new Todo Item
-                  </Button>
-               </div>
-            </Link>
-         </div>
-         <Container
-            sx={{
-               display: "flex",
-               justifyContent: "center",
-            }}
-         >
-            <Box className="w-fit lg:w-full flex justify-center">
-               <Box className="w-full lg:w-full">
-                  <Box className="mt-10 grid grid-cols-1 sm:grid-cols-6">
-                     <Box className="sm:col-span-6">
-                        <Table
-                           className="bg-gray-300 text-black text-left sm:col-span-6"
-                           cellPadding="1000px"
+          </Box>
+        </div>
+        <Link href={"/create"}>
+          <div className="text-center">
+            <Button
+              variant="outlined"
+              className="text-xs md:text-base lg:text-base bg-transparent hover:bg-indigo-500 text-indigo-700 font-semibold hover:text-white py-1 px-2 lg:py-2 lg:px-4 border border-indigo-500 hover:border-transparent rounded"
+            >
+              + Add a new Todo Item
+            </Button>
+          </div>
+        </Link>
+      </div>
+      <Container
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+        }}
+      >
+        <Box className="w-fit lg:w-full flex justify-center">
+          <Box className="w-full lg:w-full">
+            <Box className="mt-10 grid grid-cols-1 sm:grid-cols-6">
+              <Box className="sm:col-span-6">
+                <Table
+                  className="bg-gray-300 text-black text-left sm:col-span-6"
+                  cellPadding="1000px"
+                >
+                  <TableHead>
+                    <TableRow>
+                      <TableCell />
+                      <TableCell
+                        className={
+                          isMobile
+                            ? classes.tableHeadRow
+                            : classes.tableHeadRowMobile
+                        }
+                      >
+                        Title
+                      </TableCell>
+                      <TableCell
+                        className={
+                          isMobile
+                            ? classes.tableHeadRow
+                            : classes.tableHeadRowMobile
+                        }
+                      >
+                        Description
+                      </TableCell>
+                      <TableCell
+                        className={
+                          isMobile
+                            ? classes.tableHeadRow
+                            : classes.tableHeadRowMobile
+                        }
+                      >
+                        Date of Creation
+                      </TableCell>
+                      <TableCell
+                        className={
+                          isMobile
+                            ? classes.tableHeadRow
+                            : classes.tableHeadRowMobile
+                        }
+                      >
+                        Status
+                      </TableCell>
+                    </TableRow>
+                  </TableHead>
+                  {data?.map((todoItem: TodoState) => (
+                    <TableBody key={todoItem.id}>
+                      <TableRow
+                        className={
+                          isMobile ? classes.tableRowMobile : classes.tableRow
+                        }
+                      >
+                        <TableCell>
+                          <Checkbox
+                            id={`${todoItem.id}`}
+                            name={`${todoItem.id}`}
+                            className="pt-4"
+                            icon={<RadioButtonUncheckedIcon />}
+                            checkedIcon={<CheckCircleIcon />}
+                            checked={todoItem.statusId == Status.COMPLETE}
+                            onChange={(ev) =>
+                              handleTodoCheckMutation.mutate({
+                                todoItemId: todoItem.id,
+                                checked: ev.target.checked,
+                              })
+                            }
+                          />
+                        </TableCell>
+                        <TableCell className="w-60">
+                          <Box
+                            className={
+                              isMobile
+                                ? classes.tableCellMobile
+                                : isMedium
+                                ? classes.tableCellMedium
+                                : classes.tableCell
+                            }
+                          >
+                            {todoItem.isEditting ? (
+                              <Input
+                                id="title"
+                                name="title"
+                                type="text"
+                                value={todoItem.title ?? ""}
+                                onChange={(ev) =>
+                                  handleTodoTitleMutation.mutate({
+                                    todoItemId: todoItem.id,
+                                    title: ev.target.value,
+                                  })
+                                }
+                                className="block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                              />
+                            ) : (
+                              <Typography>{todoItem.title}</Typography>
+                            )}
+                          </Box>
+                        </TableCell>
+                        <TableCell
+                          className={
+                            isMobile
+                              ? "min-w-40"
+                              : isMedium
+                              ? "min-w-64"
+                              : "min-w-96"
+                          }
                         >
-                           <TableHead>
-                              <TableRow>
-                                 <TableCell />
-                                 <TableCell
-                                    className={
-                                       isMobile
-                                          ? classes.tableHeadRow
-                                          : classes.tableHeadRowMobile
-                                    }
-                                 >
-                                    Title
-                                 </TableCell>
-                                 <TableCell
-                                    className={
-                                       isMobile
-                                          ? classes.tableHeadRow
-                                          : classes.tableHeadRowMobile
-                                    }
-                                 >
-                                    Description
-                                 </TableCell>
-                                 <TableCell
-                                    className={
-                                       isMobile
-                                          ? classes.tableHeadRow
-                                          : classes.tableHeadRowMobile
-                                    }
-                                 >
-                                    Date of Creation
-                                 </TableCell>
-                                 <TableCell
-                                    className={
-                                       isMobile
-                                          ? classes.tableHeadRow
-                                          : classes.tableHeadRowMobile
-                                    }
-                                 >
-                                    Status
-                                 </TableCell>
-                              </TableRow>
-                           </TableHead>
-                           {data?.map((todoItem: TodoState) => (
-                              <TableBody key={todoItem.id}>
-                                 <TableRow>
-                                    <TableCell>
-                                       <Checkbox
-                                          id={`${todoItem.id}`}
-                                          name={`${todoItem.id}`}
-                                          className="pt-4"
-                                          icon={<RadioButtonUncheckedIcon />}
-                                          checkedIcon={<CheckCircleIcon />}
-                                          checked={
-                                             todoItem.statusId ==
-                                             Status.COMPLETE
-                                          }
-                                          onChange={(ev) =>
-                                             handleTodoCheckMutation.mutate({
-                                                todoItemId: todoItem.id,
-                                                checked: ev.target.checked,
-                                             })
-                                          }
-                                       />
-                                    </TableCell>
-                                    <TableCell className="min-w-60">
-                                       <Box
-                                          className={
-                                             isMobile
-                                                ? classes.tableRowMobile
-                                                : isMedium
-                                                ? classes.tableRowMedium
-                                                : classes.tableRow
-                                          }
-                                       >
-                                          {todoItem.isEditting ? (
-                                             <Input
-                                                id="title"
-                                                name="title"
-                                                type="text"
-                                                value={todoItem.title ?? ""}
-                                                onChange={(ev) =>
-                                                   handleTodoTitleMutation.mutate(
-                                                      {
-                                                         todoItemId:
-                                                            todoItem.id,
-                                                         title: ev.target.value,
-                                                      }
-                                                   )
-                                                }
-                                                className="block rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                                             />
-                                          ) : (
-                                             <Typography variant="body1">
-                                                {todoItem.title}
-                                             </Typography>
-                                          )}
-                                       </Box>
-                                    </TableCell>
-                                    <TableCell
-                                       className={
-                                          isMobile
-                                             ? "w-40"
-                                             : isMedium
-                                             ? "w-64"
-                                             : "w-96"
-                                       }
-                                    >
-                                       <Box
-                                          className={
-                                             isMobile
-                                                ? classes.tableRowMobile
-                                                : classes.tableRow
-                                          }
-                                       >
-                                          {todoItem.isEditting ? (
-                                             <TextField
-                                                id="content"
-                                                name="content"
-                                                fullWidth
-                                                multiline
-                                                minRows={2}
-                                                variant="standard"
-                                                value={todoItem.content ?? ""}
-                                                onChange={(ev) =>
-                                                   handleTodoContentMutation.mutate(
-                                                      {
-                                                         todoItemId:
-                                                            todoItem.id,
-                                                         content:
-                                                            ev.target.value,
-                                                      }
-                                                   )
-                                                }
-                                                rows={2}
-                                             />
-                                          ) : (
-                                             <Typography variant="body1">
-                                                {todoItem.content}
-                                             </Typography>
-                                          )}
-                                       </Box>
-                                    </TableCell>
-                                    <TableCell className="min-w-36">
-                                       <Box
-                                          className={
-                                             isMobile
-                                                ? classes.tableRowMobile
-                                                : classes.tableRow
-                                          }
-                                       >
-                                          <Typography variant="body1">
-                                             {todoItem.createdAt.toLocaleDateString()}
-                                          </Typography>
-                                       </Box>
-                                    </TableCell>
-                                    <TableCell>
-                                       <Box
-                                          className={
-                                             isMobile
-                                                ? classes.tableRowMobile
-                                                : classes.tableRow
-                                          }
-                                       >
-                                          <Typography
-                                             variant="body1"
-                                             color={
-                                                todoItem.statusId ==
-                                                Status.PENDING
-                                                   ? "warning"
-                                                   : "success"
-                                             }
-                                          >
-                                             {todoItem.statusId ==
-                                             Status.PENDING
-                                                ? "Pending"
-                                                : "Complete"}
-                                          </Typography>
-                                       </Box>
-                                    </TableCell>
-                                    <TableCell className="min-w-40">
-                                       <Box
-                                          className={
-                                             isMobile
-                                                ? classes.tableRowMobile
-                                                : classes.tableRow
-                                          }
-                                       >
-                                          {!todoItem.isEditting ? (
-                                             <Button
-                                                key={`edit${todoItem.id}`}
-                                                color="inherit"
-                                                onClick={() =>
-                                                   handleIsEdittingMutation.mutate(
-                                                      {
-                                                         todoItemId:
-                                                            todoItem.id,
-                                                         isEditting:
-                                                            !todoItem.isEditting,
-                                                      }
-                                                   )
-                                                }
-                                             >
-                                                <EditIcon />
-                                             </Button>
-                                          ) : (
-                                             <>
-                                                <Button
-                                                   key={todoItem.id}
-                                                   color="success"
-                                                   onClick={() =>
-                                                      updateTodoItemMutation.mutate(
-                                                         todoItem
-                                                      )
-                                                   }
-                                                >
-                                                   <CheckCircleIcon />
-                                                </Button>
-                                                <Button
-                                                   key={`cancel${todoItem.id}`}
-                                                   color="error"
-                                                   onClick={() =>
-                                                      handleIsEdittingMutation.mutate(
-                                                         {
-                                                            todoItemId:
-                                                               todoItem.id,
-                                                            isEditting:
-                                                               !todoItem?.isEditting,
-                                                         }
-                                                      )
-                                                   }
-                                                >
-                                                   <CancelIcon />
-                                                </Button>
-                                             </>
-                                          )}
-                                       </Box>
-                                    </TableCell>
-                                    <TableCell>
-                                       <Button
-                                          onClick={() =>
-                                             handleDeleteButtonMutation.mutate(
-                                                todoItem.id
-                                             )
-                                          }
-                                       >
-                                          <DeleteIcon color="action" />
-                                       </Button>
-                                    </TableCell>
-                                 </TableRow>
-                              </TableBody>
-                           ))}
-                        </Table>
-                     </Box>
-                  </Box>
-               </Box>
+                          <Box
+                            className={
+                              isMobile
+                                ? classes.tableCellMobile
+                                : isMedium
+                                ? classes.tableCellMedium
+                                : classes.tableCell
+                            }
+                          >
+                            {todoItem.isEditting ? (
+                              <TextField
+                                id="content"
+                                name="content"
+                                fullWidth
+                                multiline
+                                minRows={2}
+                                variant="standard"
+                                value={todoItem.content ?? ""}
+                                onChange={(ev) =>
+                                  handleTodoContentMutation.mutate({
+                                    todoItemId: todoItem.id,
+                                    content: ev.target.value,
+                                  })
+                                }
+                                rows={2}
+                              />
+                            ) : (
+                              <Typography>{todoItem.content}</Typography>
+                            )}
+                          </Box>
+                        </TableCell>
+                        <TableCell className="w-36">
+                          <Box
+                            className={
+                              isMobile
+                                ? classes.tableCellMobile
+                                : isMedium
+                                ? classes.tableCellMedium
+                                : classes.tableCell
+                            }
+                          >
+                            <Typography>
+                              {todoItem.createdAt.toLocaleDateString()}
+                            </Typography>
+                          </Box>
+                        </TableCell>
+                        <TableCell>
+                          <Box
+                            className={
+                              isMobile
+                                ? classes.tableCellMobile
+                                : isMedium
+                                ? classes.tableCellMedium
+                                : classes.tableCell
+                            }
+                          >
+                            <Typography
+                              color={
+                                todoItem.statusId == Status.PENDING
+                                  ? "warning"
+                                  : "success"
+                              }
+                            >
+                              {todoItem.statusId == Status.PENDING
+                                ? "Pending"
+                                : "Complete"}
+                            </Typography>
+                          </Box>
+                        </TableCell>
+                        <TableCell className="w-40">
+                          <Box
+                            className={
+                              isMobile
+                                ? classes.tableCellMobile
+                                : isMedium
+                                ? classes.tableCellMedium
+                                : classes.tableCell
+                            }
+                          >
+                            {!todoItem.isEditting ? (
+                              <Button
+                                key={`edit${todoItem.id}`}
+                                color="inherit"
+                                onClick={() =>
+                                  handleIsEdittingMutation.mutate({
+                                    todoItemId: todoItem.id,
+                                    isEditting: !todoItem.isEditting,
+                                  })
+                                }
+                              >
+                                <EditIcon />
+                              </Button>
+                            ) : (
+                              <>
+                                <Button
+                                  key={todoItem.id}
+                                  color="success"
+                                  onClick={() =>
+                                    updateTodoItemMutation.mutate(todoItem)
+                                  }
+                                >
+                                  <CheckCircleIcon />
+                                </Button>
+                                <Button
+                                  key={`cancel${todoItem.id}`}
+                                  color="error"
+                                  onClick={() =>
+                                    handleIsEdittingMutation.mutate({
+                                      todoItemId: todoItem.id,
+                                      isEditting: !todoItem?.isEditting,
+                                    })
+                                  }
+                                >
+                                  <CancelIcon />
+                                </Button>
+                              </>
+                            )}
+                          </Box>
+                        </TableCell>
+                        <TableCell className="w-fit">
+                          <Button
+                            onClick={() =>
+                              handleDeleteButtonMutation.mutate(todoItem.id)
+                            }
+                            className="s-2"
+                          >
+                            <DeleteIcon color="action" />
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    </TableBody>
+                  ))}
+                </Table>
+              </Box>
             </Box>
-         </Container>
-      </Box>
-   );
+          </Box>
+        </Box>
+      </Container>
+    </Box>
+  );
 }
