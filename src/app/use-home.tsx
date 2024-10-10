@@ -119,12 +119,10 @@ export const useHome = () => {
   });
 
   const getTodos = async (filter: number): Promise<TodoState[]> => {
-    console.log(filter);
     const todoItems = await getAllTodos(filter);
     const newTodoItems: TodoState[] = todoItems.map((todoItem) => {
       return { ...todoItem, isEditting: false };
     });
-    console.log(newTodoItems);
     return newTodoItems;
   };
 
