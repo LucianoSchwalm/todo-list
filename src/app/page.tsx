@@ -13,6 +13,7 @@ import {
   InputLabel,
   Link,
   MenuItem,
+  Pagination,
   Select,
   Table,
   TableBody,
@@ -27,6 +28,7 @@ import { makeStyles } from "@mui/styles";
 import { Status } from "@/dtos/status";
 import { useHome } from "./use-home";
 import { TodoState } from "@/dtos/todoState";
+import { ChangeEvent, useState } from "react";
 
 const useStyles = makeStyles({
   tableRow: {
@@ -66,9 +68,11 @@ export default function Home() {
   const isMedium = useMediaQuery("(max-width:1300px)");
   const isMobile = useMediaQuery("(max-width:600px)");
   const classes = useStyles();
+  const [page, setPage] = useState(1);
   const {
     data,
     filter,
+    pageTotal,
     handleFilterMutation,
     handleTodoCheckMutation,
     handleTodoContentMutation,
@@ -76,7 +80,11 @@ export default function Home() {
     handleDeleteButtonMutation,
     handleIsEdittingMutation,
     updateTodoItemMutation,
-  } = useHome();
+  } = useHome(page);
+
+  const handlePagination = (ev: ChangeEvent<unknown>, value: number) => {
+    setPage(value);
+  };
 
   return (
     <Box className="pt-10 pl-0 lg:pl-10 min-h-screen bg-gray-300">
@@ -272,7 +280,6 @@ export default function Home() {
                                   content: ev.target.value,
                                 })
                               }
-                              rows={2}
                             />
                           ) : (
                             <>{todoItem.content}</>
@@ -386,6 +393,11 @@ export default function Home() {
                     </TableBody>
                   ))}
                 </Table>
+                <Pagination
+                  count={pageTotal}
+                  className="flex justify-center py-5"
+                  onChange={(ev, page) => handlePagination(ev, page)}
+                />
               </Box>
             </Box>
           </Box>

@@ -33,6 +33,41 @@ export async function getAllTodos(filter?: number): Promise<Todo[]> {
   });
 }
 
+export async function getTodosItemsWithPagination(
+  page: number,
+  pageSize: number,
+  filter?: number
+) {
+  const countItem = await db.todo.count({
+    where: {
+      statusId: filter == 0 ? {} : filter,
+    },
+  });
+
+  const pageTotal = Math.ceil(countItem / pageSize);
+
+  const todos = await db.todo.findMany({
+    where: {
+      statusId: filter == 0 ? {} : filter,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+    skip: (page - 1) * pageSize,
+    take: pageSize,
+  });
+  return { todos, pageTotal };
+}
+
+export async function getATodoItem(id: number) {
+  const todo = await db.todo.findUnique({
+    where: {
+      id,
+    },
+  });
+  return todo;
+}
+
 export async function createTodoItem(formData: FormData) {
   await db.todo.create({
     data: {

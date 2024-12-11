@@ -1,21 +1,31 @@
 import {
   deleteTodoItem,
   getAllTodos,
+  getATodoItem,
+  getTodosItemsWithPagination,
   updateStatusId,
   updateTodoItem,
 } from "@/actions/actions";
 import { TodoState } from "@/dtos/todoState";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  Updater,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { useState } from "react";
 import toast from "react-hot-toast";
 
-export const useHome = () => {
+export const useHome = (page: number) => {
   const queryClient = useQueryClient();
   const [filter, setFilter] = useState("0");
+  const [pageTotal, setPageTotal] = useState(0);
+
+  const pageSize = 10;
 
   const { data } = useQuery<TodoState[]>({
-    queryKey: ["todos", filter],
-    queryFn: () => getTodos(Number.parseInt(filter)),
+    queryKey: ["todos", filter, page],
+    queryFn: () => getTodos(page, pageSize, Number.parseInt(filter)),
   });
 
   const updateTodoItemMutation = useMutation({
@@ -95,7 +105,10 @@ export const useHome = () => {
         (todoItem) => todoItem.id === todoItemId
       );
       todoItem!.isEditting = isEditting;
-      queryClient.setQueryData(newTodoItems, data);
+      if (isEditting) queryClient.setQueryData(newTodoItems, data);
+      if (!isEditting) {
+        getTodo(todoItemId);
+      }
     },
   });
 
@@ -118,17 +131,41 @@ export const useHome = () => {
     },
   });
 
-  const getTodos = async (filter: number): Promise<TodoState[]> => {
-    const todoItems = await getAllTodos(filter);
-    const newTodoItems: TodoState[] = todoItems.map((todoItem) => {
+  const getTodo = async (todoId: number) => {
+    const todo = await getATodoItem(todoId);
+    queryClient.setQueryData(["todos", filter, page], () => {
+      const newTodoItems = [...data!];
+      const newTodo = newTodoItems?.find(
+        (todoItem) => todoItem.id === todo!.id
+      );
+      newTodo!.content = todo!.content;
+      newTodo!.title = todo!.title;
+      newTodo!.statusId = todo!.statusId;
+    });
+    console.log(data);
+  };
+
+  const getTodos = async (
+    page: number,
+    pageSize: number,
+    filter: number
+  ): Promise<TodoState[]> => {
+    const { todos, pageTotal } = await getTodosItemsWithPagination(
+      page,
+      pageSize,
+      filter
+    );
+    const newTodoItems: TodoState[] = todos.map((todoItem) => {
       return { ...todoItem, isEditting: false };
     });
+    setPageTotal(pageTotal);
     return newTodoItems;
   };
 
   return {
     data,
     filter,
+    pageTotal,
     handleFilterMutation,
     handleTodoCheckMutation,
     handleTodoTitleMutation,
